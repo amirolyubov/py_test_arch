@@ -311,43 +311,43 @@ class SERVO_MAN:
         print(self.model['scenario_stack'])
 
     def write_keys_to_sql(self):
+        for _ in range(len(self.model['scenario_stack'])):
             for key, value in self.model['scenario_stack'].items():
-
-                    conn = sqlite3.connect(self.path)
-                    cursor = conn.cursor()
-                    cursor.execute("""
-                    insert into `servo_i` values (%d) 
-                    """ % (value[self.LEFT_EYE]))
-                    cursor.execute("""
-                     insert into `servo_` values (%d) 
-                    """ % ((value[self.RIGHT_EYE])))
-                    cursor.execute("""
-                    insert into `servo_3` values (%d) 
-                    """ % (value[self.RIGHT_SHOLDER]))
-                    cursor.execute("""
-                    insert into `servo_4` values (%d) 
-                    """ % (value[self.RIGHT_HAND]))
-                    cursor.execute("""
-                    insert into `servo_5` values (%d) 
-                    """ % (value[self.LEFT_HAND]))
-                    cursor.execute("""
-                    insert into `servo_6` values (%d) 
-                    """ % (value[self.LEFT_LEG]))
-                    cursor.execute("""
-                    insert into `servo_7` values (%d) 
-                    """ % (value[self.RIGHT_LEG]))
-                    cursor.execute("""
-                    insert into `servo_8` values (%d) 
-                    """ % (value[self.RESERVED_1]))
-                    cursor.execute("""
-                    insert into `servo_9` values (%d) 
-                    """ % (value[self.RESERVED_2]))
-                    cursor.execute("""
-                    insert into `time` values (%s) 
-                    """ % (key))
-                    cursor.execute("""
-                    insert into `speed` values (%s) 
-                    """ % (value[9]))
+                conn = sqlite3.connect(self.path)
+                cursor = conn.cursor()
+                cursor.execute("""
+                insert into `servo_1` values (%d) 
+                """ % (value[self.LEFT_EYE]))
+                cursor.execute("""
+                 insert into `servo_2` values (%d) 
+                """ % ((value[self.RIGHT_EYE])))
+                cursor.execute("""
+                insert into `servo_3` values (%d) 
+                """ % (value[self.RIGHT_SHOLDER]))
+                cursor.execute("""
+                insert into `servo_4` values (%d) 
+                """ % (value[self.RIGHT_HAND]))
+                cursor.execute("""
+                insert into `servo_5` values (%d) 
+                """ % (value[self.LEFT_HAND]))
+                cursor.execute("""
+                insert into `servo_6` values (%d) 
+                """ % (value[self.LEFT_LEG]))
+                cursor.execute("""
+                insert into `servo_7` values (%d) 
+                """ % (value[self.RIGHT_LEG]))
+                cursor.execute("""
+                insert into `servo_8` values (%d) 
+                """ % (value[self.RESERVED_1]))
+                cursor.execute("""
+                insert into `servo_9` values (%d) 
+                """ % (value[self.RESERVED_2]))
+                cursor.execute("""
+                insert into `time` values (%s) 
+                """ % (key))
+                cursor.execute("""
+                insert into `speed` values (%s) 
+                """ % (value[-1]))
 
 
             conn.commit()
