@@ -11,7 +11,6 @@ from sketchbooks.SW.run_servo import compiling
 from db_input import *
 from tkinter.messagebox import showinfo
 
-
 class SERVO_MAN:
     def __init__(self, master):
         self.master = master
@@ -20,6 +19,7 @@ class SERVO_MAN:
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
         self.master.title('серво менеджер')
+
 
         ##########angles from window######################
         self.left_eye = 0
@@ -98,76 +98,49 @@ class SERVO_MAN:
         self.RESERVED_1 = 7
         self.RESERVED_2 = 8
 
+        self.CONFIG = {
+             'servos': [
+                 {
+                     'servo_id': self.LEFT_EYE,
+                     'name': 'feafe', 'row': 1, 'column': 1},
+                 {
+                     'servo_id': self.RIGHT_EYE,
+                     'name': 'evsev', 'row': 1, 'column': 3},
+                 {
+                     'servo_id': self.RIGHT_SHOLDER,
+                     'name': 'svseve', 'row': 5, 'column': 3},
+                 {
+                     'servo_id': self.RIGHT_HAND,
+                     'name': 'svsv', 'row': 3, 'column': 3},
+                 {
+                     'servo_id': self.LEFT_HAND,
+                     'name': 'svsev sev', 'row': 3, 'column': 1},
+                 {
+                     'servo_id': self.LEFT_LEG,
+                     'name': 'sevevsev', 'row': 5, 'column': 1},
+                 {
+                     'servo_id': self.RIGHT_LEG,
+                     'name': 'svsev', 'row': 5, 'column': 2},
+                 {
+                     'servo_id': self.RESERVED_1,
+                     'name': 'svsvse', 'row': 1, 'column': 2},
+                 {
+                     'servo_id': self.RESERVED_2,
+                     'name': 'svsevesvb', 'row': 3, 'column': 2},
+                ]
+        }
+        self.UI={
+            'servos': [0,0,0,0,0,0,0,0,0]
+        }
 
 
-
-        self.lab_ser_1 = ttk.Label(self.master,
-                                   text='глаз левый ').grid(row=1, column=1)
-        self.left_eye = IntVar()
-        self.angle_box1 = ttk.Entry(self.master,
-                                    width=3,
-                                    textvariable=self.left_eye)
-        self.angle_box1.grid(row=2, column=1)
-        self.loop_l_e = ttk.Checkbutton(self.master,
-                                        ).grid(row=1, column=2, padx=10)
-
-        self.lab_ser_2 = ttk.Label(self.master,text='глаз правый').grid(row=4, column=1)
-        self.right_e = IntVar()
-        self.angle_box2 = ttk.Entry(self.master, textvariable=self.right_e, width=3)
-        self.angle_box2.grid(row=5, column=1)
-        self.loop_r_e = ttk.Checkbutton(self.master,
-                                        ).grid(row=4, column=2, padx=10)
-
-        self.lab_ser_3 = ttk.Label(self.master, text='плечо правое').grid(row=8, column=1)
-        self.right_sholder = IntVar()
-        self.angle_box3 = ttk.Entry(self.master,
-                                    textvariable=self.right_sholder, width=3)
-        self.angle_box3.grid(row=9, column=1)
-        self.loop_r_s = ttk.Checkbutton(self.master,
-                                        ).grid(row=8, column=2, padx=10)
-
-        self.lab_ser_4 = ttk.Label(self.master, text='рука правая').grid(row=1, column=3, )
-        self.right_hand = IntVar()
-        self.angle_box4 = ttk.Entry(self.master, textvariable=self.right_hand, width=3)
-        self.angle_box4.grid(row=2, column=3)
-        self.loop_r_h = ttk.Checkbutton(self.master,
-                                        ).grid(row=1, column=4, padx=10)
-
-        self.lab_ser_5 = ttk.Label(self.master, text='рука левая').grid(row=4, column=3)
-        self.left_hand = IntVar()
-        self.angle_box5 = ttk.Entry(self.master, textvariable=self.left_hand, width=3)
-        self.angle_box5.grid(row=5, column=3)
-        self.loop_r_l = ttk.Checkbutton(self.master,
-                                        ).grid(row=4, column=4, padx=10)
-
-        self.lab_ser_6 = ttk.Label(self.master, text='нога левая').grid(row=8, column=3)
-        self.left_leg = IntVar()
-        self.angle_box6 = ttk.Entry(self.master, textvariable=self.left_leg, width=3)
-        self.angle_box6.grid(row=9, column=3)
-        self.loop_l_l = ttk.Checkbutton(self.master,
-                                        ).grid(row=8, column=4, padx=10)
-
-        self.lab_ser_7 = ttk.Label(self.master, text='нога правая ').grid(row=1, column=6)
-        self.right_leg = IntVar()
-        self.angle_box7 = ttk.Entry(self.master, textvariable=self.right_leg, width=3)
-        self.angle_box7.grid(row=2, column=6)
-
-        self.loop_r_l = ttk.Checkbutton(self.master,
-                                        ).grid(row=1, column=7, padx=10)
-
-        self.lab_ser_8 = ttk.Label(self.master, text='reserved_1 ').grid(row=4, column=6)
-        self.reserved_1 = IntVar()
-        self.angle_box8 = ttk.Entry(self.master, textvariable=self.reserved_1, width=3)
-        self.angle_box8.grid(row=5, column=6)
-        self.loop_res = ttk.Checkbutton(self.master,
-                                        ).grid(row=4, column=7, padx=10)
-
-        self.lab_ser_9 = ttk.Label(self.master, text='reserved_2 ').grid(row=8, column=6)
-        self.reserved_2 = IntVar()
-        self.angle_box9 = ttk.Entry(self.master, textvariable=self.reserved_2, width=3)
-        self.angle_box9.grid(row=9, column=6)
-        self.loop_res2 = ttk.Checkbutton(self.master,
-                                        ).grid(row=8, column=7, padx=10)
+        for servo in self.CONFIG['servos']: # TODO: replace self.CONFOG into CONFIG
+            self.create_servo_controller(
+                servo['servo_id'],
+                servo['name'],
+                servo['row'],
+                servo['column']
+            )
 
         self.play_butt = ttk.Button(self.master,
                                     text='проиграть',
@@ -224,12 +197,28 @@ class SERVO_MAN:
 
         self.model = {
             'current_time': 0,
+
             'scenario_stack': {
                 0: [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
 
             }
         }
 
+
+
+    def create_servo_controller(self, servo_id, name, row, column):
+        lab_ser = ttk.Label(self.master,
+                                   text=name).grid(row=row, column=column)
+
+        self.UI['servos'][servo_id] = IntVar()
+        angle_box = ttk.Entry(self.master,
+                                    width=3,
+                                    textvariable=self.UI['servos'][servo_id])
+        angle_box.grid(row=row+1, column=column)
+        loop = ttk.Button(self.master,
+                                   command=self.loop_dialog_constructor(servo_id),
+                                   text='открыть цикл'
+                                   ).grid(row=row, column=column, padx=10)
 
 
     def update_slider(self,val):
@@ -286,9 +275,9 @@ class SERVO_MAN:
         if self.model['current_time'] in self.model['scenario_stack']:
             self.model['scenario_stack'][self.model['current_time']][servo_id] = value
         else:
-            arr = self.get_prev_from_dict(self.model['scenario_stack'], self.model['current_time'])
-            arr[servo_id] = value
-            self.model['scenario_stack'][self.model['current_time']] = arr
+            previous = self.get_prev_from_dict(self.model['scenario_stack'], self.model['current_time'])
+            previous[servo_id] = value
+            self.model['scenario_stack'][self.model['current_time']] = previous
 
 
     def check_Model(self):
@@ -366,6 +355,59 @@ class SERVO_MAN:
     def new_data(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = new_base(self.newWindow)
+
+
+    def loop_dialog_constructor(self,servo_id):
+        def loop_dialog():
+            newonfWindow = tk.Toplevel(self.master)
+            newonfWindow.geometry('200x130')
+            newonfWindow.title('цикл1')
+            first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+            self.model['scenario_stack'][self.model['current_time']][servo_id] = IntVar()
+            loop_le1 = ttk.Entry(newonfWindow, textvariable=self.left_eye, width=4)
+            loop_le1.grid(row=1, column=2)
+            self.loop_sec_entry1 = IntVar()
+            second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+            loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry1, width=4)
+            loop_le2.grid(row=2, column=2)
+            self.loop_int_entry1 = IntVar()
+            interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+            loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry1, width=4)
+            loop_le_int.grid(row=3, column=2)
+
+            self.loop_speed1 = IntVar()
+            loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed1, width=4)
+            loop_speed.grid(row=4, column=2)
+            speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+            len_label = ttk.Label(newonfWindow, text='длительность ', borderwidth=3).grid(row=5, column=1)
+            self.leng = IntVar()
+            leng = ttk.Entry(newonfWindow, textvariable=self.leng, width=3).grid(row=5, column=2)
+
+            cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+            cancell_but.grid(row=6, column=2)
+
+            self.temp_time = ttk.Button(newonfWindow, text='засечь время').grid(row=6, column=1)
+
+        return loop_dialog
+
+
+
+    def check_loop(self):
+        pass
+
+    def write_cycle(self):
+        #obtain values from windows
+        self.model['scenario_stack'][round(self.time_scale.get())]=[
+            self.left_eye.get(), self.right_e.get(),
+            self.right_sholder.get(),self.right_hand.get(),
+            self.left_hand.get(),self.left_leg.get(),
+            self.right_leg.get(),self.reserved_1.get(),
+            self.reserved_2.get(),round(self.speed_slider.get())
+        ]
+        print(self.model['scenario_stack'])
+    def handle_cycle_change(self,cycle_value_id,value):
+        pass
 
 
 def main():
