@@ -300,6 +300,7 @@ class SERVO_MAN:
 
 
     def adden_key_to_model(self):
+        #obtain values from windows
         self.model['scenario_stack'][round(self.time_scale.get())]=[
             self.left_eye.get(), self.right_e.get(),
             self.right_sholder.get(),self.right_hand.get(),
