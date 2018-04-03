@@ -11,6 +11,7 @@ from sketchbooks.SW.run_servo import compiling
 from db_input import *
 from tkinter.messagebox import showinfo
 
+
 class SERVO_MAN:
     def __init__(self, master):
         self.master = master
@@ -19,7 +20,6 @@ class SERVO_MAN:
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
         self.master.title('серво менеджер')
-
 
         ##########angles from window######################
         self.left_eye = 0
@@ -98,49 +98,77 @@ class SERVO_MAN:
         self.RESERVED_1 = 7
         self.RESERVED_2 = 8
 
-        self.CONFIG = {
-             'servos': [
-                 {
-                     'servo_id': self.LEFT_EYE,
-                     'name': 'feafe', 'row': 1, 'column': 1},
-                 {
-                     'servo_id': self.RIGHT_EYE,
-                     'name': 'evsev', 'row': 1, 'column': 3},
-                 {
-                     'servo_id': self.RIGHT_SHOLDER,
-                     'name': 'svseve', 'row': 5, 'column': 3},
-                 {
-                     'servo_id': self.RIGHT_HAND,
-                     'name': 'svsv', 'row': 3, 'column': 3},
-                 {
-                     'servo_id': self.LEFT_HAND,
-                     'name': 'svsev sev', 'row': 3, 'column': 1},
-                 {
-                     'servo_id': self.LEFT_LEG,
-                     'name': 'sevevsev', 'row': 5, 'column': 1},
-                 {
-                     'servo_id': self.RIGHT_LEG,
-                     'name': 'svsev', 'row': 5, 'column': 2},
-                 {
-                     'servo_id': self.RESERVED_1,
-                     'name': 'svsvse', 'row': 1, 'column': 2},
-                 {
-                     'servo_id': self.RESERVED_2,
-                     'name': 'svsevesvb', 'row': 3, 'column': 2},
-                ]
-        }
-        self.UI={
-            'servos': [0,0,0,0,0,0,0,0,0]
-        }
 
 
-        for servo in self.CONFIG['servos']: # TODO: replace self.CONFOG into CONFIG
-            self.create_servo_controller(
-                servo['servo_id'],
-                servo['name'],
-                servo['row'],
-                servo['column']
-            )
+
+        self.lab_ser_1 = ttk.Label(self.master,
+                                   text='глаз левый ').grid(row=1, column=1)
+        self.left_eye = IntVar()
+        self.angle_box1 = ttk.Entry(self.master,
+                                    width=3,
+                                    textvariable=self.left_eye)
+        self.angle_box1.grid(row=2, column=1)
+        self.loop_l_e = ttk.Checkbutton(self.master,
+                                        command=self.check_loop
+                                        ).grid(row=1, column=2, padx=10)
+
+        self.lab_ser_2 = ttk.Label(self.master,text='глаз правый').grid(row=4, column=1)
+        self.right_e = IntVar()
+        self.angle_box2 = ttk.Entry(self.master, textvariable=self.right_e, width=3)
+        self.angle_box2.grid(row=5, column=1)
+        self.loop_r_e = ttk.Checkbutton(self.master,
+                                        command=self.check_loop2).grid(row=4, column=2, padx=10)
+
+        self.lab_ser_3 = ttk.Label(self.master, text='плечо правое').grid(row=8, column=1)
+        self.right_sholder = IntVar()
+        self.angle_box3 = ttk.Entry(self.master,
+                                    textvariable=self.right_sholder, width=3)
+        self.angle_box3.grid(row=9, column=1)
+        self.loop_r_s = ttk.Checkbutton(self.master,
+                                        ).grid(row=8, column=2, padx=10)
+
+        self.lab_ser_4 = ttk.Label(self.master, text='рука правая').grid(row=1, column=3, )
+        self.right_hand = IntVar()
+        self.angle_box4 = ttk.Entry(self.master, textvariable=self.right_hand, width=3)
+        self.angle_box4.grid(row=2, column=3)
+        self.loop_r_h = ttk.Checkbutton(self.master,
+                                        ).grid(row=1, column=4, padx=10)
+
+        self.lab_ser_5 = ttk.Label(self.master, text='рука левая').grid(row=4, column=3)
+        self.left_hand = IntVar()
+        self.angle_box5 = ttk.Entry(self.master, textvariable=self.left_hand, width=3)
+        self.angle_box5.grid(row=5, column=3)
+        self.loop_r_l = ttk.Checkbutton(self.master,
+                                        ).grid(row=4, column=4, padx=10)
+
+        self.lab_ser_6 = ttk.Label(self.master, text='нога левая').grid(row=8, column=3)
+        self.left_leg = IntVar()
+        self.angle_box6 = ttk.Entry(self.master, textvariable=self.left_leg, width=3)
+        self.angle_box6.grid(row=9, column=3)
+        self.loop_l_l = ttk.Checkbutton(self.master,
+                                        ).grid(row=8, column=4, padx=10)
+
+        self.lab_ser_7 = ttk.Label(self.master, text='нога правая ').grid(row=1, column=6)
+        self.right_leg = IntVar()
+        self.angle_box7 = ttk.Entry(self.master, textvariable=self.right_leg, width=3)
+        self.angle_box7.grid(row=2, column=6)
+
+        self.loop_r_l = ttk.Checkbutton(self.master,
+                                        ).grid(row=1, column=7, padx=10)
+
+        self.lab_ser_8 = ttk.Label(self.master, text='reserved_1 ').grid(row=4, column=6)
+        self.reserved_1 = IntVar()
+        self.angle_box8 = ttk.Entry(self.master, textvariable=self.reserved_1, width=3)
+        self.angle_box8.grid(row=5, column=6)
+        self.loop_res = ttk.Checkbutton(self.master,
+                                        ).grid(row=4, column=7, padx=10)
+
+        self.lab_ser_9 = ttk.Label(self.master, text='reserved_2 ').grid(row=8, column=6)
+        self.reserved_2 = IntVar()
+        self.angle_box9 = ttk.Entry(self.master, textvariable=self.reserved_2, width=3)
+        self.angle_box9.grid(row=9, column=6)
+        self.loop_res2 = ttk.Checkbutton(self.master,
+                                        ).grid(row=8, column=7, padx=10)
 
         self.play_butt = ttk.Button(self.master,
                                     text='проиграть',
@@ -151,7 +179,7 @@ class SERVO_MAN:
         self.button.grid(row=10, column=3)
         self.button_save = ttk.Button(self.master,
                             text='сохранить сценарий ',
-                            command=self.write_keys_to_sql
+                            command=self.write_changes_to_sql
                             ).grid(row=11, column=3)
         self.new = ttk.Button(
             self.master,
@@ -196,36 +224,16 @@ class SERVO_MAN:
         self.speed_slider.grid(row=23, column=0,columnspan=3)
 
         self.model = {
-            'current_time': 0,
 
-            'scenario_stack': {
-                0: [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
 
-            }
+
+
         }
 
 
 
-    def create_servo_controller(self, servo_id, name, row, column):
-        lab_ser = ttk.Label(self.master,
-                                   text=name).grid(row=row, column=column)
-
-        self.UI['servos'][servo_id] = IntVar()
-        angle_box = ttk.Entry(self.master,
-                                    width=3,
-                                    textvariable=self.UI['servos'][servo_id])
-        angle_box.grid(row=row+1, column=column)
-        loop = ttk.Button(self.master,
-                                   command=self.loop_dialog_constructor(servo_id),
-                                   text='открыть цикл'
-                                   ).grid(row=row, column=column, padx=10)
-
-
     def update_slider(self,val):
-        # take value from slider and check
-        self.model['current_time'] = round(float(val))
-        self.check_servos(self.model['current_time'])
-
+      pass
 
     def check_servos(self,sec):
         # cheking and equalize
@@ -235,8 +243,7 @@ class SERVO_MAN:
     def update_view(self,sec):
         #for return old values from model
         self.model = {
-            'current_time': sec,
-            'scenario_stack': {
+
                 round(self.time_scale.get()): [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_hand.get(), self.left_hand.get(),
@@ -244,7 +251,7 @@ class SERVO_MAN:
                     self.reserved_1.get(), self.reserved_2.get(),
                     self.speed_slider.get()
                 ]
-            }
+
         }
         print(self.model)
 
@@ -290,46 +297,47 @@ class SERVO_MAN:
 
     def adden_key_to_model(self):
         #obtain values from windows
-        self.model['scenario_stack'][round(self.time_scale.get())]=[
+        self.model[round(self.time_scale.get()*1000)]=[
             self.left_eye.get(), self.right_e.get(),
             self.right_sholder.get(),self.right_hand.get(),
             self.left_hand.get(),self.left_leg.get(),
             self.right_leg.get(),self.reserved_1.get(),
             self.reserved_2.get(),round(self.speed_slider.get())
         ]
-        print(self.model['scenario_stack'])
+        print(self.model)
 
     def write_keys_to_sql(self):
+        # TODO fix number record to sql rebuld from last value on saving all
         for _ in range(len(self.model['scenario_stack'])):
             for key, value in self.model['scenario_stack'].items():
                 conn = sqlite3.connect(self.path)
                 cursor = conn.cursor()
                 cursor.execute("""
-                insert into `servo_1` values (%d) 
+                insert into `servo_0` values (%d) 
                 """ % (value[self.LEFT_EYE]))
                 cursor.execute("""
-                 insert into `servo_2` values (%d) 
+                 insert into `servo_1` values (%d) 
                 """ % ((value[self.RIGHT_EYE])))
                 cursor.execute("""
-                insert into `servo_3` values (%d) 
+                insert into `servo_2` values (%d) 
                 """ % (value[self.RIGHT_SHOLDER]))
                 cursor.execute("""
-                insert into `servo_4` values (%d) 
+                insert into `servo_3` values (%d) 
                 """ % (value[self.RIGHT_HAND]))
                 cursor.execute("""
-                insert into `servo_5` values (%d) 
+                insert into `servo_4` values (%d) 
                 """ % (value[self.LEFT_HAND]))
                 cursor.execute("""
-                insert into `servo_6` values (%d) 
+                insert into `servo_5` values (%d) 
                 """ % (value[self.LEFT_LEG]))
                 cursor.execute("""
-                insert into `servo_7` values (%d) 
+                insert into `servo_6` values (%d) 
                 """ % (value[self.RIGHT_LEG]))
                 cursor.execute("""
-                insert into `servo_8` values (%d) 
+                insert into `servo_7` values (%d) 
                 """ % (value[self.RESERVED_1]))
                 cursor.execute("""
-                insert into `servo_9` values (%d) 
+                insert into `servo_8` values (%d) 
                 """ % (value[self.RESERVED_2]))
                 cursor.execute("""
                 insert into `time` values (%s) 
@@ -337,9 +345,267 @@ class SERVO_MAN:
                 cursor.execute("""
                 insert into `speed` values (%s) 
                 """ % (value[-1]))
-
-
             conn.commit()
+            self.write_to_h()
+
+
+
+    def write_to_h(self):
+
+        # take all from data base
+        conn = sqlite3.connect(self.path)  # here will be avalibale data bases
+        cursor = conn.cursor()
+        # time
+        cursor.execute("SELECT * FROM `time` order by  `time_pos` ")
+        sql_time = cursor.fetchall()
+        # servo_1
+        cursor.execute("SELECT * FROM `servo_0`  ")
+        sql_servo_1 = cursor.fetchall()
+        # servo_2
+        cursor.execute("SELECT * FROM `servo_1`  ")
+        sql_servo_2 = cursor.fetchall()
+        # servo_3
+        cursor.execute("SELECT * FROM `servo_2` ")
+        sql_servo_3 = cursor.fetchall()
+        # servo_4
+        cursor.execute("SELECT * FROM `servo_3`  ")
+        sql_servo_4 = cursor.fetchall()
+        # servo_5
+        cursor.execute("SELECT * FROM `servo_4`  ")
+        sql_servo_5 = cursor.fetchall()
+        # servo_6
+        cursor.execute("SELECT * FROM `servo_5`  ")
+        sql_servo_6 = cursor.fetchall()
+        # servo_7
+        cursor.execute("SELECT * FROM `servo_6`  ")
+        sql_servo_7 = cursor.fetchall()
+        # servo_8
+        cursor.execute("SELECT * FROM `servo_7`  ")
+        sql_servo_8 = cursor.fetchall()
+        # servo_9
+        cursor.execute("SELECT * FROM `servo_8`  ")
+        sql_servo_9 = cursor.fetchall()
+        cursor.execute("SELECT * FROM `speed` order by  `speed_pos` ")
+        sql_speed = cursor.fetchall()
+        # servo_1
+        with open('template.h', 'w') as file:
+            file.writelines('int time_play=1;\n')
+            file.writelines('int speed_row[] = {')
+            file.writelines(str(sql_speed))
+            file.writelines('};\n')
+            file.writelines('int LEyeArray[][] = {')
+            file.writelines(str(sql_servo_1))
+            file.writelines('};\n')
+            file.writelines('int REyeArray[] = {')
+            file.writelines(str(sql_servo_2))
+            file.writelines('};\n')
+            file.writelines('int LArmArray[] = {')
+            file.writelines(str(sql_servo_3))
+            file.writelines('};\n')
+            file.writelines('int RArmArray[] = {')
+            file.writelines(str(sql_servo_4))
+            file.writelines('};\n')
+            file.writelines('int LhandArray[] = {')
+            file.writelines(str(sql_servo_5))
+            file.writelines('};\n')
+            file.writelines('int RhandArray[] = {')
+            file.writelines(str(sql_servo_6))
+            file.writelines('};\n')
+            file.writelines('int LLegArray[] = {')
+            file.writelines(str(sql_servo_7))
+            file.writelines('};\n')
+            file.writelines('int RLegArray[] = {')
+            file.writelines(str(sql_servo_8))
+            file.writelines('};\n')
+            file.writelines('int AssArray[] = {')
+            file.writelines(str(sql_servo_9))
+            file.writelines('};\n')
+            file.writelines('unsigned long KeyArray[] = {')
+            file.writelines(str(sql_time))
+            file.writelines('};\n')
+        self.clear_strings()
+
+    def clear_strings(self):
+        # clean by rubish
+        f = open('template.h', 'r')
+        o = open('VAL.h', 'w')
+        while 1:
+            line = f.readline()
+            if not line: break
+            line = line.replace('(', '')
+            line = line.replace(')', '')
+            line = line.replace(',,', ',')
+            line = line.replace("''", '0')
+            line = line.replace('[][]', '[]')
+            line = line.replace('{[]}', '{}')
+            line = line.replace('{[', '{')
+            line = line.replace(']}', '}')
+            line = line.replace(')]};', '')
+            o.write(line)
+        o.close()
+        call('rm template.h', shell=True)
+        shutil.move("/home/qbc/PycharmProjects/ard/VAL.h",
+                    "/usr/share/arduino/hardware/arduino/cores/arduino/VAL.h")
+
+    def check_loop(self):
+
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл1')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.left_eye = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.left_eye, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry1 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry1, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry1 = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry1, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed1 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed1, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow,text = 'засечь время',command= lambda: self.count_clicks(self.loop_to)).grid(row=5,column=1)
+
+    def check_loop2(self):
+
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл2')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.right_e = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.right_e, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry2 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry2, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry2 = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry2, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed2 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed2, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время', command=lambda: self.count_clicks(self.loop_to2)).grid(
+            row=5, column=1)
+
+
+
+
+
+
+
+
+    def loop_to(self):
+        # call to each calling func to
+        print('loop')
+        range_index = 0
+        primary_time =self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry1.get() * 1000)):
+            primary_time+=int(self.loop_int_entry1.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                self.left_eye.get(), self.right_e.get(),
+                self.right_sholder.get(),self.right_hand.get(),
+                self.left_hand.get(),self.left_leg.get(),
+                self.right_leg.get(),self.reserved_1.get(),
+                self.reserved_2.get(),round(self.loop_speed1.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                self.loop_sec_entry1.get(), self.right_e.get(),
+                self.right_sholder.get(), self.right_hand.get(),
+                self.left_hand.get(), self.left_leg.get(),
+                self.right_leg.get(), self.reserved_1.get(),
+                self.reserved_2.get(), round(self.loop_speed1.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to2(self):
+        # call to each calling func to
+        print('loop2')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry2.get() * 1000)):
+            primary_time += int(self.loop_int_entry2.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed2.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed2.get())]
+            range_index += 1
+            print(self.model)
+
+    def count_clicks(self, calling_loop):
+        self.count += 1
+        # TODO ALL REFACTOR BELLOW
+        if self.count == 1:
+            self.primary_time = round(self.time_scale.get() * 1000)
+            messagebox.showinfo("значение", "записано первое значение")
+        if self.count == 2:
+            self.count = 0
+            messagebox.showinfo("значение", "записано второе значение ")
+            self.final_time = round(self.time_scale.get() * 1000)
+            calling_loop()  # space for another loops
+
+
+
+    def write_changes_to_sql(self):
+        conn = sqlite3.connect(self.path)  # here will be avalibale data bases
+        cursor = conn.cursor()
+        for key,values in self.model.items():
+            cursor.execute(""" insert into`servo_0`values( % d)""" % (values[self.LEFT_EYE]))
+            cursor.execute(""" insert into`servo_1`values( % d)""" % (values[self.RIGHT_EYE]))
+            cursor.execute(""" insert into`servo_2`values( % d)""" % (values[self.RIGHT_SHOLDER]))
+            cursor.execute(""" insert into`servo_3`values( % d)""" % (values[self.RIGHT_HAND]))
+            cursor.execute(""" insert into`servo_4`values( % d)""" % (values[self.LEFT_HAND]))
+            cursor.execute(""" insert into`servo_5`values( % d)""" % (values[self.LEFT_LEG]))
+            cursor.execute(""" insert into`servo_6`values( % d)""" % (values[self.RIGHT_LEG]))
+            cursor.execute(""" insert into`servo_7`values( % d)""" % (values[self.RESERVED_1]))
+            cursor.execute(""" insert into`servo_8`values( % d)""" % (values[self.RESERVED_2]))
+            cursor.execute(""" insert into`time`values( % s)""" % (key))
+            cursor.execute(""" insert into`speed`values( % d)""" % (values[-1]))
+        conn.commit()
+        self.write_to_h()
+
+
+
+
+
+
+
+
 
     def choose_db(self):
         fname = askopenfilename(filetypes=(("scenario", "*.db"),
@@ -355,59 +621,6 @@ class SERVO_MAN:
     def new_data(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = new_base(self.newWindow)
-
-
-    def loop_dialog_constructor(self,servo_id):
-        def loop_dialog():
-            newonfWindow = tk.Toplevel(self.master)
-            newonfWindow.geometry('200x130')
-            newonfWindow.title('цикл1')
-            first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
-            self.model['scenario_stack'][self.model['current_time']][servo_id] = IntVar()
-            loop_le1 = ttk.Entry(newonfWindow, textvariable=self.left_eye, width=4)
-            loop_le1.grid(row=1, column=2)
-            self.loop_sec_entry1 = IntVar()
-            second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
-            loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry1, width=4)
-            loop_le2.grid(row=2, column=2)
-            self.loop_int_entry1 = IntVar()
-            interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
-            loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry1, width=4)
-            loop_le_int.grid(row=3, column=2)
-
-            self.loop_speed1 = IntVar()
-            loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed1, width=4)
-            loop_speed.grid(row=4, column=2)
-            speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
-
-            len_label = ttk.Label(newonfWindow, text='длительность ', borderwidth=3).grid(row=5, column=1)
-            self.leng = IntVar()
-            leng = ttk.Entry(newonfWindow, textvariable=self.leng, width=3).grid(row=5, column=2)
-
-            cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
-            cancell_but.grid(row=6, column=2)
-
-            self.temp_time = ttk.Button(newonfWindow, text='засечь время').grid(row=6, column=1)
-
-        return loop_dialog
-
-
-
-    def check_loop(self):
-        pass
-
-    def write_cycle(self):
-        #obtain values from windows
-        self.model['scenario_stack'][round(self.time_scale.get())]=[
-            self.left_eye.get(), self.right_e.get(),
-            self.right_sholder.get(),self.right_hand.get(),
-            self.left_hand.get(),self.left_leg.get(),
-            self.right_leg.get(),self.reserved_1.get(),
-            self.reserved_2.get(),round(self.speed_slider.get())
-        ]
-        print(self.model['scenario_stack'])
-    def handle_cycle_change(self,cycle_value_id,value):
-        pass
 
 
 def main():
