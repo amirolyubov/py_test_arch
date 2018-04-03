@@ -37,16 +37,6 @@ class SERVO_MAN:
         self.default_seconds = 0
         self.timer_seconds = self.default_seconds
         self.sql_time = []
-        self.sql_servo_1 = 0
-        self.sql_servo_2 = 0
-        self.sql_servo_3 = 0
-        self.sql_servo_4 = 0
-        self.sql_servo_5 = 0
-        self.sql_servo_6 = 0
-        self.sql_servo_7 = 0
-        self.sql_servo_8 = 0
-        self.sql_servo_9 = 0
-        self.sql_speed = 0
         self.time = 0
         #########values for changer default databases#########
         self.current_name_db = ''
@@ -72,6 +62,7 @@ class SERVO_MAN:
         self.loop_int_entry7 = 0
         self.loop_int_entry8 = 0
         self.loop_int_entry9 = 0
+
 
         self.loop_speed1=0
         self.loop_speed2=0
@@ -171,7 +162,7 @@ class SERVO_MAN:
                                         ).grid(row=8, column=7, padx=10)
 
         self.play_butt = ttk.Button(self.master,
-                                    text='проиграть',
+                                    text='проиграть',command= lambda :print(self.model)
                                     ).grid(row=12, column=3)
         self.button = ttk.Button(self.master,
                                  text='записать позиции',
@@ -484,8 +475,8 @@ class SERVO_MAN:
         cancell_but.grid(row=5, column=2)
 
         temp_time = ttk.Button(newonfWindow, text='засечь время',
-                               command=lambda: self.count_clicks(self.loop_to3)).grid(
-            row=5, column=1)
+                               command=lambda: self.count_clicks(self.loop_to3)).grid(row=5, column=1)
+
 
     def check_loop4(self):
         newonfWindow = tk.Toplevel(self.master)
@@ -673,8 +664,8 @@ class SERVO_MAN:
         final_time = self.final_time
         for i in range(int(primary_time),
                        int(self.final_time),
-                       int(self.loop_int_entry1.get() * 1000)):
-            primary_time+=int(self.loop_int_entry1.get() * 1000)
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time+=int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
                 self.model['{}'.format(primary_time)] = [
                 self.left_eye.get(), self.right_e.get(),
@@ -692,6 +683,8 @@ class SERVO_MAN:
             range_index += 1
             print(self.model)
 
+
+
     def loop_to2(self):
         # call to each calling func to
         print('loop2')
@@ -700,7 +693,7 @@ class SERVO_MAN:
         final_time = self.final_time
         for i in range(int(primary_time),
                        int(self.final_time),
-                       int(self.loop_int_entry2.get() * 1000)):
+                       int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
                 self.model['{}'.format(primary_time)] = [
@@ -727,7 +720,7 @@ class SERVO_MAN:
         final_time = self.final_time
         for i in range(int(primary_time),
                        int(self.final_time),
-                       int(self.loop_int_entry3.get() * 1000)):
+                       int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
                 self.model['{}'.format(primary_time)] = [
@@ -735,14 +728,14 @@ class SERVO_MAN:
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed2.get())]
+                    self.reserved_2.get(), round(self.loop_speed3.get())]
             if range_index % 2 == 0:
                 self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.loop_sec_entry3.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed4.get())]
+                    self.reserved_2.get(), round(self.loop_speed3.get())]
             range_index += 1
             print(self.model)
 
@@ -842,14 +835,14 @@ class SERVO_MAN:
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed7.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
                 self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                    self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.loop_sec_entry7.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed7.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             range_index += 1
             print(self.model)
 
@@ -861,22 +854,22 @@ class SERVO_MAN:
         final_time = self.final_time
         for i in range(int(primary_time),
                        int(self.final_time),
-                       int(self.loop_int_entry2.get() * 1000)):
-            primary_time += int(self.loop_int_entry2.get() * 1000)
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
                 self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed2.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
                 self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.loop_sec_entry2.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.loop_sec_entry8.get(),
-                    self.reserved_2.get(), round(self.loop_speed2.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             range_index += 1
             print(self.model)
 
@@ -896,14 +889,14 @@ class SERVO_MAN:
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed9.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
                 self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.loop_sec_entry2.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.loop_sec_entry9.get(), round(self.loop_speed9.get())]
+                    self.loop_sec_entry9.get(), round(self.loop_speed.get())]
             range_index += 1
             print(self.model)
 
@@ -918,7 +911,6 @@ class SERVO_MAN:
             messagebox.showinfo("значение", "записано второе значение ")
             self.final_time = round(self.time_scale.get() * 1000)
             calling_loop()  # space for another loops
-
 
 
     def write_changes_to_sql(self):
