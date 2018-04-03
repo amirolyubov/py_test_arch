@@ -65,14 +65,7 @@ class SERVO_MAN:
 
 
         self.loop_speed1=0
-        self.loop_speed2=0
-        self.loop_speed3=0
-        self.loop_speed4=0
-        self.loop_speed5=0
-        self.loop_speed6=0
-        self.loop_speed7=0
-        self.loop_speed8=0
-        self.loop_speed9=0
+
 
         self.primary_time = 0
         self.final_time = 0
@@ -667,13 +660,19 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time+=int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
-                self.left_eye.get(), self.right_e.get(),
-                self.right_sholder.get(),self.right_hand.get(),
-                self.left_hand.get(),self.left_leg.get(),
-                self.right_leg.get(),self.reserved_1.get(),
-                self.reserved_2.get(),round(self.loop_speed1.get())]
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[0] = self.left_eye.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(),self.right_hand.get(),
+                    self.left_hand.get(),self.left_leg.get(),
+                    self.right_leg.get(),self.reserved_1.get(),
+                    self.reserved_2.get(),round(self.loop_speed1.get())]
             if range_index % 2 == 0:
+
                 self.model['{}'.format(primary_time)] = [
                 self.loop_sec_entry1.get(), self.right_e.get(),
                 self.right_sholder.get(), self.right_hand.get(),
@@ -682,8 +681,6 @@ class SERVO_MAN:
                 self.reserved_2.get(), round(self.loop_speed1.get())]
             range_index += 1
             print(self.model)
-
-
 
     def loop_to2(self):
         # call to each calling func to
@@ -696,19 +693,30 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[1] = self.right_e.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed2.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
+
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[1] = self.loop_sec_entry2.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.loop_sec_entry2.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed2.get())]
+                    self.reserved_2.get(), round(self.loop_speed.get())]
             range_index += 1
             print(self.model)
 
@@ -723,14 +731,25 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed3.get())]
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[2] = self.right_sholder.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed3.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[2] = self.loop_sec_entry3.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.loop_sec_entry3.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
@@ -750,14 +769,25 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed4.get())]
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[3] = self.right_hand.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed4.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[3] = self.loop_sec_entry4.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.right_e.get(),
                     self.right_sholder.get(), self.loop_sec_entry4.get(),
                     self.left_hand.get(), self.left_leg.get(),
@@ -777,14 +807,24 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[4] = self.left_hand.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
                     self.reserved_2.get(), round(self.loop_speed5.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[4] = self.loop_sec_entry5.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.loop_sec_entry5.get(), self.left_leg.get(),
@@ -804,14 +844,24 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[5] = self.left_leg.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
                     self.reserved_2.get(), round(self.loop_speed6.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[5] = self.loop_sec_entry6.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.loop_sec_entry6.get(),
@@ -830,19 +880,31 @@ class SERVO_MAN:
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[6] =  self.right_leg.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.loop_sec_entry7.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[6] = self.loop_sec_entry7.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.loop_sec_entry7.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed.get())]
             range_index += 1
             print(self.model)
 
@@ -856,15 +918,25 @@ class SERVO_MAN:
                        int(self.final_time),
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
+            if range_index % 2 == 0:
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[7] = self.reserved_1.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
                     self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[7] =  self.loop_sec_entry8.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.loop_sec_entry2.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
@@ -883,15 +955,25 @@ class SERVO_MAN:
                        int(self.final_time),
                        int(self.loop_int_entry.get() * 1000)):
             primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                self.model['{}'.format(primary_time)] = [
+            if range_index % 2 == 0:
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[8] = self.reserved_2.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
                     self.reserved_2.get(), round(self.loop_speed.get())]
             if range_index % 2 == 0:
-                self.model['{}'.format(primary_time)] = [
+                if '{}'.format(primary_time) in self.model:
+                    current = self.model['{}'.format(primary_time)]
+                    current[8] = self.reserved_2.get()
+                    self.model['{}'.format(primary_time)] = current
+                else:
+                    self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(),self.loop_sec_entry2.get(),
                     self.right_sholder.get(), self.right_hand.get(),
                     self.left_hand.get(), self.left_leg.get(),
