@@ -124,28 +124,28 @@ class SERVO_MAN:
         self.angle_box3 = ttk.Entry(self.master,
                                     textvariable=self.right_sholder, width=3)
         self.angle_box3.grid(row=9, column=1)
-        self.loop_r_s = ttk.Checkbutton(self.master,
+        self.loop_r_s = ttk.Checkbutton(self.master,command=self.check_loop3
                                         ).grid(row=8, column=2, padx=10)
 
         self.lab_ser_4 = ttk.Label(self.master, text='рука правая').grid(row=1, column=3, )
         self.right_hand = IntVar()
         self.angle_box4 = ttk.Entry(self.master, textvariable=self.right_hand, width=3)
         self.angle_box4.grid(row=2, column=3)
-        self.loop_r_h = ttk.Checkbutton(self.master,
+        self.loop_r_h = ttk.Checkbutton(self.master,command=self.check_loop4
                                         ).grid(row=1, column=4, padx=10)
 
         self.lab_ser_5 = ttk.Label(self.master, text='рука левая').grid(row=4, column=3)
         self.left_hand = IntVar()
         self.angle_box5 = ttk.Entry(self.master, textvariable=self.left_hand, width=3)
         self.angle_box5.grid(row=5, column=3)
-        self.loop_r_l = ttk.Checkbutton(self.master,
+        self.loop_r_l = ttk.Checkbutton(self.master,command=self.check_loop5
                                         ).grid(row=4, column=4, padx=10)
 
         self.lab_ser_6 = ttk.Label(self.master, text='нога левая').grid(row=8, column=3)
         self.left_leg = IntVar()
         self.angle_box6 = ttk.Entry(self.master, textvariable=self.left_leg, width=3)
         self.angle_box6.grid(row=9, column=3)
-        self.loop_l_l = ttk.Checkbutton(self.master,
+        self.loop_l_l = ttk.Checkbutton(self.master,command=self.check_loop6
                                         ).grid(row=8, column=4, padx=10)
 
         self.lab_ser_7 = ttk.Label(self.master, text='нога правая ').grid(row=1, column=6)
@@ -153,21 +153,21 @@ class SERVO_MAN:
         self.angle_box7 = ttk.Entry(self.master, textvariable=self.right_leg, width=3)
         self.angle_box7.grid(row=2, column=6)
 
-        self.loop_r_l = ttk.Checkbutton(self.master,
+        self.loop_r_l = ttk.Checkbutton(self.master,command=self.check_loop7
                                         ).grid(row=1, column=7, padx=10)
 
         self.lab_ser_8 = ttk.Label(self.master, text='reserved_1 ').grid(row=4, column=6)
         self.reserved_1 = IntVar()
         self.angle_box8 = ttk.Entry(self.master, textvariable=self.reserved_1, width=3)
         self.angle_box8.grid(row=5, column=6)
-        self.loop_res = ttk.Checkbutton(self.master,
+        self.loop_res = ttk.Checkbutton(self.master,command=self.check_loop8
                                         ).grid(row=4, column=7, padx=10)
 
         self.lab_ser_9 = ttk.Label(self.master, text='reserved_2 ').grid(row=8, column=6)
         self.reserved_2 = IntVar()
         self.angle_box9 = ttk.Entry(self.master, textvariable=self.reserved_2, width=3)
         self.angle_box9.grid(row=9, column=6)
-        self.loop_res2 = ttk.Checkbutton(self.master,
+        self.loop_res2 = ttk.Checkbutton(self.master,command=self.check_loop9
                                         ).grid(row=8, column=7, padx=10)
 
         self.play_butt = ttk.Button(self.master,
@@ -223,14 +223,7 @@ class SERVO_MAN:
                                       )
         self.speed_slider.grid(row=23, column=0,columnspan=3)
 
-        self.model = {
-
-
-
-
-        }
-
-
+        self.model = {}
 
     def update_slider(self,val):
       pass
@@ -305,48 +298,6 @@ class SERVO_MAN:
             self.reserved_2.get(),round(self.speed_slider.get())
         ]
         print(self.model)
-
-    def write_keys_to_sql(self):
-        # TODO fix number record to sql rebuld from last value on saving all
-        for _ in range(len(self.model['scenario_stack'])):
-            for key, value in self.model['scenario_stack'].items():
-                conn = sqlite3.connect(self.path)
-                cursor = conn.cursor()
-                cursor.execute("""
-                insert into `servo_0` values (%d) 
-                """ % (value[self.LEFT_EYE]))
-                cursor.execute("""
-                 insert into `servo_1` values (%d) 
-                """ % ((value[self.RIGHT_EYE])))
-                cursor.execute("""
-                insert into `servo_2` values (%d) 
-                """ % (value[self.RIGHT_SHOLDER]))
-                cursor.execute("""
-                insert into `servo_3` values (%d) 
-                """ % (value[self.RIGHT_HAND]))
-                cursor.execute("""
-                insert into `servo_4` values (%d) 
-                """ % (value[self.LEFT_HAND]))
-                cursor.execute("""
-                insert into `servo_5` values (%d) 
-                """ % (value[self.LEFT_LEG]))
-                cursor.execute("""
-                insert into `servo_6` values (%d) 
-                """ % (value[self.RIGHT_LEG]))
-                cursor.execute("""
-                insert into `servo_7` values (%d) 
-                """ % (value[self.RESERVED_1]))
-                cursor.execute("""
-                insert into `servo_8` values (%d) 
-                """ % (value[self.RESERVED_2]))
-                cursor.execute("""
-                insert into `time` values (%s) 
-                """ % (key))
-                cursor.execute("""
-                insert into `speed` values (%s) 
-                """ % (value[-1]))
-            conn.commit()
-            self.write_to_h()
 
 
 
@@ -461,9 +412,9 @@ class SERVO_MAN:
         loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry1, width=4)
         loop_le2.grid(row=2, column=2)
 
-        self.loop_int_entry1 = IntVar()
+        self.loop_int_entry = IntVar()
         interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
-        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry1, width=4)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
         loop_le_int.grid(row=3, column=2)
 
         self.loop_speed1 = IntVar()
@@ -490,9 +441,9 @@ class SERVO_MAN:
         loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry2, width=4)
         loop_le2.grid(row=2, column=2)
 
-        self.loop_int_entry2 = IntVar()
+        self.loop_int_entry = IntVar()
         interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
-        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry2, width=4)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
         loop_le_int.grid(row=3, column=2)
 
         self.loop_speed2 = IntVar()
@@ -506,6 +457,207 @@ class SERVO_MAN:
         temp_time = ttk.Button(newonfWindow, text='засечь время', command=lambda: self.count_clicks(self.loop_to2)).grid(
             row=5, column=1)
 
+    def check_loop3(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл3')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.right_sholder = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.right_sholder, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry3 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry3, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed3 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed3, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                               command=lambda: self.count_clicks(self.loop_to3)).grid(
+            row=5, column=1)
+
+    def check_loop4(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл4')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.right_hand = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.right_hand, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry4 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry4, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed4 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed4, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                               command=lambda: self.count_clicks(self.loop_to4)).grid(row=5, column=1)
+
+    def check_loop5(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл5')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.left_hand = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.left_hand, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry5 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry5, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed5 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed5, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                           command=lambda: self.count_clicks(self.loop_to5)).grid(row=5, column=1)
+
+    def check_loop6(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл6')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.left_leg = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.left_leg, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry6 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry6, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed6 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed6, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                           command=lambda: self.count_clicks(self.loop_to6)).grid(row=5, column=1)
+
+    def check_loop7(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл7')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.right_leg = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.right_leg, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry7 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry7, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed7 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed7, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                               command=lambda: self.count_clicks(self.loop_to7)).grid(row=5, column=1)
+
+    def check_loop8(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл8')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.reserved_1 = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.reserved_1, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry8 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry8, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed8 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed8, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                               command=lambda: self.count_clicks(self.loop_to8)).grid(row=5, column=1)
+    def check_loop9(self):
+        newonfWindow = tk.Toplevel(self.master)
+        newonfWindow.geometry('200x130')
+        newonfWindow.title('цикл9')
+        first_label = ttk.Label(newonfWindow, text='первый', borderwidth=3).grid(row=1, column=1)
+        self.reserved_2 = IntVar()
+        loop_le1 = ttk.Entry(newonfWindow, textvariable=self.reserved_2, width=4)
+        loop_le1.grid(row=1, column=2)
+        self.loop_sec_entry9 = IntVar()
+        second_label = ttk.Label(newonfWindow, text='второй', borderwidth=3).grid(row=2, column=1)
+        loop_le2 = ttk.Entry(newonfWindow, textvariable=self.loop_sec_entry9, width=4)
+        loop_le2.grid(row=2, column=2)
+
+        self.loop_int_entry = IntVar()
+        interval_label = ttk.Label(newonfWindow, text='интервал', borderwidth=3).grid(row=3, column=1)
+        loop_le_int = ttk.Entry(newonfWindow, textvariable=self.loop_int_entry, width=4)
+        loop_le_int.grid(row=3, column=2)
+
+        self.loop_speed9 = IntVar()
+        loop_speed = ttk.Entry(newonfWindow, textvariable=self.loop_speed9, width=4)
+        loop_speed.grid(row=4, column=2)
+        speed_label = ttk.Label(newonfWindow, text='cкорость', borderwidth=3).grid(row=4, column=1)
+
+        cancell_but = ttk.Button(newonfWindow, text='отмена', command=lambda: newonfWindow.destroy())
+        cancell_but.grid(row=5, column=2)
+
+        temp_time = ttk.Button(newonfWindow, text='засечь время',
+                               command=lambda: self.count_clicks(self.loop_to9)).grid(row=5, column=1)
 
 
 
@@ -549,7 +701,7 @@ class SERVO_MAN:
         for i in range(int(primary_time),
                        int(self.final_time),
                        int(self.loop_int_entry2.get() * 1000)):
-            primary_time += int(self.loop_int_entry2.get() * 1000)
+            primary_time += int(self.loop_int_entry.get() * 1000)
             if range_index % 2 != 0:
                 self.model['{}'.format(primary_time)] = [
                     self.left_eye.get(), self.right_e.get(),
@@ -564,6 +716,194 @@ class SERVO_MAN:
                     self.left_hand.get(), self.left_leg.get(),
                     self.right_leg.get(), self.reserved_1.get(),
                     self.reserved_2.get(), round(self.loop_speed2.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to3(self):
+        # call to each calling func to
+        print('loop3')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry3.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed2.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.loop_sec_entry3.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed4.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to4(self):
+        # call to each calling func to
+        print('loop4')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed4.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.right_e.get(),
+                    self.right_sholder.get(), self.loop_sec_entry4.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed4.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to5(self):
+        # call to each calling func to
+        print('loop5')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed5.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.loop_sec_entry5.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed5.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to6(self):
+        # call to each calling func to
+        print('loop6')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed6.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.loop_sec_entry6.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed6.get())]
+            range_index += 1
+            print(self.model)
+    def loop_to7(self):
+        # call to each calling func to
+        print('loop7')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed7.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.loop_sec_entry7.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed7.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to8(self):
+        # call to each calling func to
+        print('loop2')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry2.get() * 1000)):
+            primary_time += int(self.loop_int_entry2.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed2.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.loop_sec_entry8.get(),
+                    self.reserved_2.get(), round(self.loop_speed2.get())]
+            range_index += 1
+            print(self.model)
+
+    def loop_to9(self):
+        # call to each calling func to
+        print('loop2')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        for i in range(int(primary_time),
+                       int(self.final_time),
+                       int(self.loop_int_entry.get() * 1000)):
+            primary_time += int(self.loop_int_entry.get() * 1000)
+            if range_index % 2 != 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(), self.right_e.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.reserved_2.get(), round(self.loop_speed9.get())]
+            if range_index % 2 == 0:
+                self.model['{}'.format(primary_time)] = [
+                    self.left_eye.get(),self.loop_sec_entry2.get(),
+                    self.right_sholder.get(), self.right_hand.get(),
+                    self.left_hand.get(), self.left_leg.get(),
+                    self.right_leg.get(), self.reserved_1.get(),
+                    self.loop_sec_entry9.get(), round(self.loop_speed9.get())]
             range_index += 1
             print(self.model)
 
@@ -598,12 +938,6 @@ class SERVO_MAN:
             cursor.execute(""" insert into`speed`values( % d)""" % (values[-1]))
         conn.commit()
         self.write_to_h()
-
-
-
-
-
-
 
 
 
