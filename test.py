@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import IntVar
 import tkinter as tk
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
@@ -10,9 +10,10 @@ import shutil
 from sketchbooks.SW.run_servo import compiling
 from db_input import *
 from tkinter.messagebox import showinfo
+from player import Player
 
 
-class SERVO_MAN:
+class SERVO_MAN(Player):
     def __init__(self, master):
         self.master = master
         self.master.geometry('800x400')
@@ -65,6 +66,14 @@ class SERVO_MAN:
 
 
         self.loop_speed1=0
+        self.loop_speed2=0
+        self.loop_speed3=0
+        self.loop_speed4=0
+        self.loop_speed5=0
+        self.loop_speed6=0
+        self.loop_speed7=0
+        self.loop_speed8=0
+        self.loop_speed9=0
 
 
         self.primary_time = 0
@@ -155,7 +164,7 @@ class SERVO_MAN:
                                         ).grid(row=8, column=7, padx=10)
 
         self.play_butt = ttk.Button(self.master,
-                                    text='проиграть',command= lambda :print(self.model)
+                                    text='проиграть',command= self.some_play
                                     ).grid(row=12, column=3)
         self.button = ttk.Button(self.master,
                                  text='записать позиции',
@@ -174,11 +183,13 @@ class SERVO_MAN:
                                       text="выбрать сценарий",
                                       command =self.choose_db).grid(row=1, column=9)
 
-        self.window_db = Listbox(self.master, width=28, height=10)
+        self.window_db = Listbox(self.master, width=28, height=8)
         self.window_db.grid(row=2, column=8,rowspan=8,columnspan=10)
         self.request_butt = ttk.Button(self.master,
-                                       text='выбрать текущий',
+                                       text='текущая база данных',
                                        command= self.current_db).grid(row=10, column=8)
+        self.select_music_but = ttk.Button(self.master, text='выбрать музыку',command= self.add).grid(row=10, column=9,columnspan=10)
+
         self.label_time = ttk.Label(self.master)
         self.label_time.grid(row=11, column=3)
 
@@ -186,14 +197,14 @@ class SERVO_MAN:
                                     orient='horizontal',
                                     length=400,
                                     from_=0, to=180,
-                                    command = self.update_slider
+                                    command = self.printime
                                     )
         self.time_scale.grid(row=19, column=0, columnspan=8)
         # digit near "время"
         self.time_label = ttk.Label(self.master, text="время").grid(row=17, column=1)
 
         self.time_digit = ttk.Label(self.master)
-        self.time_digit.grid(row=16, column=0,rowspan=1,columnspan=7)
+        self.time_digit.grid(row=17, column=0,rowspan=1,columnspan=7)
 
         self.speed_label = ttk.Label(self.master, text="cкорость").grid(row=22, column=1)
 
@@ -203,14 +214,44 @@ class SERVO_MAN:
         self.speed_slider = ttk.Scale(self.master,
                                       orient="horizontal",
                                       length=100,
-                                      from_=0, to=100,
+                                      from_=0, to=100,command=self.printspeed
                                       )
         self.speed_slider.grid(row=23, column=0,columnspan=3)
 
+
+
+
+
+
         self.model = {}
 
-    def update_slider(self,val):
-      pass
+    def some_play(self):
+
+        t1 = threading.Thread(target=compiling)
+
+
+        t1.start()
+
+    def printspeed(self, val):
+        # define for speed
+        speed = round(float(val))
+        # change label to define speed
+        self.speed_digit.configure(text=round(speed))
+
+
+
+    def printime(self, val):
+        # define for TIME
+        time = self.time_scale.get()
+        m = time // 60
+        s = time - m * 60
+        self.time_digit.configure(text='%02d:%02d' % (m, s))
+        # HERE USING STOPPER
+        # self.stopper()
+
+
+
+
 
     def check_servos(self,sec):
         # cheking and equalize
@@ -274,7 +315,20 @@ class SERVO_MAN:
 
     def adden_key_to_model(self):
         #obtain values from windows
-        self.model[round(self.time_scale.get()*1000)]=[
+        if '{}'.format(self.time_scale.get()*1000) in self.model:
+            current = self.model['{}'.format(self.time_scale.get()*1000)]
+            self.model['{}'.format(self.time_scale.get() * 1000)] = current
+            current[0] = self.left_eye.get()
+            current[1] = self.right_e.get()
+            current[2] = self.right_sholder.get()
+            current[3] = self.right_hand.get()
+            current[4] = self.left_hand.get()
+            current[5] = self.left_leg.get()
+            current[6] = self.right_leg.get()
+            current[7] = self.reserved_1.get()
+            current[8] = self.reserved_2.get()
+        else:
+            self.model[round(self.time_scale.get()*1000)]=[
             self.left_eye.get(), self.right_e.get(),
             self.right_sholder.get(),self.right_hand.get(),
             self.left_hand.get(),self.left_leg.get(),
@@ -285,102 +339,7 @@ class SERVO_MAN:
 
 
 
-    def write_to_h(self):
 
-        # take all from data base
-        conn = sqlite3.connect(self.path)  # here will be avalibale data bases
-        cursor = conn.cursor()
-        # time
-        cursor.execute("SELECT * FROM `time` order by  `time_pos` ")
-        sql_time = cursor.fetchall()
-        # servo_1
-        cursor.execute("SELECT * FROM `servo_0`  ")
-        sql_servo_1 = cursor.fetchall()
-        # servo_2
-        cursor.execute("SELECT * FROM `servo_1`  ")
-        sql_servo_2 = cursor.fetchall()
-        # servo_3
-        cursor.execute("SELECT * FROM `servo_2` ")
-        sql_servo_3 = cursor.fetchall()
-        # servo_4
-        cursor.execute("SELECT * FROM `servo_3`  ")
-        sql_servo_4 = cursor.fetchall()
-        # servo_5
-        cursor.execute("SELECT * FROM `servo_4`  ")
-        sql_servo_5 = cursor.fetchall()
-        # servo_6
-        cursor.execute("SELECT * FROM `servo_5`  ")
-        sql_servo_6 = cursor.fetchall()
-        # servo_7
-        cursor.execute("SELECT * FROM `servo_6`  ")
-        sql_servo_7 = cursor.fetchall()
-        # servo_8
-        cursor.execute("SELECT * FROM `servo_7`  ")
-        sql_servo_8 = cursor.fetchall()
-        # servo_9
-        cursor.execute("SELECT * FROM `servo_8`  ")
-        sql_servo_9 = cursor.fetchall()
-        cursor.execute("SELECT * FROM `speed` order by  `speed_pos` ")
-        sql_speed = cursor.fetchall()
-        # servo_1
-        with open('template.h', 'w') as file:
-            file.writelines('int time_play=1;\n')
-            file.writelines('int speed_row[] = {')
-            file.writelines(str(sql_speed))
-            file.writelines('};\n')
-            file.writelines('int LEyeArray[][] = {')
-            file.writelines(str(sql_servo_1))
-            file.writelines('};\n')
-            file.writelines('int REyeArray[] = {')
-            file.writelines(str(sql_servo_2))
-            file.writelines('};\n')
-            file.writelines('int LArmArray[] = {')
-            file.writelines(str(sql_servo_3))
-            file.writelines('};\n')
-            file.writelines('int RArmArray[] = {')
-            file.writelines(str(sql_servo_4))
-            file.writelines('};\n')
-            file.writelines('int LhandArray[] = {')
-            file.writelines(str(sql_servo_5))
-            file.writelines('};\n')
-            file.writelines('int RhandArray[] = {')
-            file.writelines(str(sql_servo_6))
-            file.writelines('};\n')
-            file.writelines('int LLegArray[] = {')
-            file.writelines(str(sql_servo_7))
-            file.writelines('};\n')
-            file.writelines('int RLegArray[] = {')
-            file.writelines(str(sql_servo_8))
-            file.writelines('};\n')
-            file.writelines('int AssArray[] = {')
-            file.writelines(str(sql_servo_9))
-            file.writelines('};\n')
-            file.writelines('unsigned long KeyArray[] = {')
-            file.writelines(str(sql_time))
-            file.writelines('};\n')
-        self.clear_strings()
-
-    def clear_strings(self):
-        # clean by rubish
-        f = open('template.h', 'r')
-        o = open('VAL.h', 'w')
-        while 1:
-            line = f.readline()
-            if not line: break
-            line = line.replace('(', '')
-            line = line.replace(')', '')
-            line = line.replace(',,', ',')
-            line = line.replace("''", '0')
-            line = line.replace('[][]', '[]')
-            line = line.replace('{[]}', '{}')
-            line = line.replace('{[', '{')
-            line = line.replace(']}', '}')
-            line = line.replace(')]};', '')
-            o.write(line)
-        o.close()
-        call('rm template.h', shell=True)
-        shutil.move("/home/qbc/PycharmProjects/ard/VAL.h",
-                    "/usr/share/arduino/hardware/arduino/cores/arduino/VAL.h")
 
     def check_loop(self):
 
@@ -643,11 +602,9 @@ class SERVO_MAN:
         temp_time = ttk.Button(newonfWindow, text='засечь время',
                                command=lambda: self.count_clicks(self.loop_to9)).grid(row=5, column=1)
 
-
-
-
-
-
+    # loop func write loop from 4 values taken this from loop window.
+    #  and will do check for comparison values with exist to model 9 window and 18 checks
+    # very important saving sequense on second comparison.there obtain from second window values
 
     def loop_to(self):
         # call to each calling func to
@@ -655,32 +612,44 @@ class SERVO_MAN:
         range_index = 0
         primary_time =self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time+=int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[0] = self.left_eye.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(),self.right_hand.get(),
-                    self.left_hand.get(),self.left_leg.get(),
-                    self.right_leg.get(),self.reserved_1.get(),
-                    self.reserved_2.get(),round(self.loop_speed1.get())]
-            if range_index % 2 == 0:
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time+=int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[0] = self.left_eye.get()
+                        current[9] = self.loop_speed1.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(),self.right_hand.get(),
+                        self.left_hand.get(),self.left_leg.get(),
+                        self.right_leg.get(),self.reserved_1.get(),
+                        self.reserved_2.get(),round(self.loop_speed1.get())]
+                if range_index % 2 !=  0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[0] = self.loop_sec_entry1.get()
+                        current[9] = self.loop_speed1.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.loop_sec_entry1.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed1.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
 
-                self.model['{}'.format(primary_time)] = [
-                self.loop_sec_entry1.get(), self.right_e.get(),
-                self.right_sholder.get(), self.right_hand.get(),
-                self.left_hand.get(), self.left_leg.get(),
-                self.right_leg.get(), self.reserved_1.get(),
-                self.reserved_2.get(), round(self.loop_speed1.get())]
-            range_index += 1
-            print(self.model)
+
+
 
     def loop_to2(self):
         # call to each calling func to
@@ -688,37 +657,45 @@ class SERVO_MAN:
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[1] = self.right_e.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[1] = self.right_e.get()
+                        current[9] = self.loop_speed1.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed1.get())]
 
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[1] = self.loop_sec_entry2.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.loop_sec_entry2.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
-            range_index += 1
-            print(self.model)
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[1] = self.loop_sec_entry2.get()
+                        current[9] = self.loop_speed1.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.loop_sec_entry1.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed1.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
 
     def loop_to3(self):
         # call to each calling func to
@@ -726,15 +703,16 @@ class SERVO_MAN:
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if range_index % 2 != 0:
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
                     if '{}'.format(primary_time) in self.model:
                         current = self.model['{}'.format(primary_time)]
                         current[2] = self.right_sholder.get()
+                        current[9] = self.loop_speed3.get()
                         self.model['{}'.format(primary_time)] = current
                     else:
                         self.model['{}'.format(primary_time)] = [
@@ -743,20 +721,26 @@ class SERVO_MAN:
                         self.left_hand.get(), self.left_leg.get(),
                         self.right_leg.get(), self.reserved_1.get(),
                         self.reserved_2.get(), round(self.loop_speed3.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[2] = self.loop_sec_entry3.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.loop_sec_entry3.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed3.get())]
-            range_index += 1
-            print(self.model)
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[2] = self.loop_sec_entry3.get()
+                        current[9] = self.loop_speed3.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.loop_sec_entry3.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed3.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
 
     def loop_to4(self):
         # call to each calling func to
@@ -764,15 +748,16 @@ class SERVO_MAN:
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if range_index % 2 != 0:
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
                     if '{}'.format(primary_time) in self.model:
                         current = self.model['{}'.format(primary_time)]
                         current[3] = self.right_hand.get()
+                        current[9] = self.loop_speed4.get()
                         self.model['{}'.format(primary_time)] = current
                     else:
                         self.model['{}'.format(primary_time)] = [
@@ -781,109 +766,41 @@ class SERVO_MAN:
                         self.left_hand.get(), self.left_leg.get(),
                         self.right_leg.get(), self.reserved_1.get(),
                         self.reserved_2.get(), round(self.loop_speed4.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[3] = self.loop_sec_entry4.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.right_e.get(),
-                    self.right_sholder.get(), self.loop_sec_entry4.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed4.get())]
-            range_index += 1
-            print(self.model)
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[3] = self.loop_sec_entry4.get()
+                        current[9] = self.loop_speed4.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.loop_sec_entry4.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed4.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
 
     def loop_to5(self):
         # call to each calling func to
-        print('loop5')
+        print('loop5 left hand')
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[4] = self.left_hand.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed5.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[4] = self.loop_sec_entry5.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.loop_sec_entry5.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed5.get())]
-            range_index += 1
-            print(self.model)
-
-    def loop_to6(self):
-        # call to each calling func to
-        print('loop6')
-        range_index = 0
-        primary_time = self.primary_time
-        final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[5] = self.left_leg.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed6.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[5] = self.loop_sec_entry6.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.loop_sec_entry6.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed6.get())]
-            range_index += 1
-            print(self.model)
-    def loop_to7(self):
-        # call to each calling func to
-        print('loop7')
-        range_index = 0
-        primary_time = self.primary_time
-        final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 != 0:
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
                 if range_index % 2 == 0:
                     if '{}'.format(primary_time) in self.model:
                         current = self.model['{}'.format(primary_time)]
-                        current[6] =  self.right_leg.get()
+                        current[4] = self.left_hand.get()
+                        current[9] = self.loop_speed5.get()
                         self.model['{}'.format(primary_time)] = current
                     else:
                         self.model['{}'.format(primary_time)] = [
@@ -891,96 +808,209 @@ class SERVO_MAN:
                         self.right_sholder.get(), self.right_hand.get(),
                         self.left_hand.get(), self.left_leg.get(),
                         self.right_leg.get(), self.reserved_1.get(),
-                        self.reserved_2.get(), round(self.loop_speed.get())]
-            if range_index % 2 == 0:
+                        self.reserved_2.get(), round(self.loop_speed5.get())]
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[4] = self.loop_sec_entry5.get()
+                        current[9] = self.loop_speed5.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.loop_sec_entry5.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed5.get())]
+
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
+
+    def loop_to6(self):
+        print('loop6leftleg')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
                 if range_index % 2 == 0:
                     if '{}'.format(primary_time) in self.model:
                         current = self.model['{}'.format(primary_time)]
-                        current[6] = self.loop_sec_entry7.get()
+                        current[5] = self.left_leg.get()
+                        current[9] = self.loop_speed6.get()
                         self.model['{}'.format(primary_time)] = current
                     else:
                         self.model['{}'.format(primary_time)] = [
                         self.left_eye.get(), self.right_e.get(),
                         self.right_sholder.get(), self.right_hand.get(),
                         self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed6.get())]
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[5] = self.loop_sec_entry6.get()
+                        current[9] = self.loop_speed6.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(),self.loop_sec_entry6.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed6.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
+
+    def loop_to7(self):
+        print('loop6leftleg')
+        range_index = 0
+        primary_time = self.primary_time
+        final_time = self.final_time
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[6] = self.right_leg.get()
+                        current[9] = self.loop_speed7.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed7.get())]
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[6] = self.loop_sec_entry7.get()
+                        current[9] = self.loop_speed7.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(),self.right_leg.get(),
                         self.loop_sec_entry7.get(), self.reserved_1.get(),
-                        self.reserved_2.get(), round(self.loop_speed.get())]
-            range_index += 1
-            print(self.model)
+                        self.reserved_2.get(), round(self.loop_speed7.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
 
     def loop_to8(self):
-        # call to each calling func to
-        print('loop2')
+        print('loop6leftleg')
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[7] = self.reserved_1.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[7] =  self.loop_sec_entry8.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.loop_sec_entry2.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.loop_sec_entry8.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
-            range_index += 1
-            print(self.model)
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[7] = self.reserved_1.get()
+                        current[9] = self.loop_speed8.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed8.get())]
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[7] = self.loop_sec_entry8.get()
+                        current[9] = self.loop_speed8.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(),self.loop_sec_entry8.get(),
+                        self.reserved_2.get(), round(self.loop_speed8.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
 
     def loop_to9(self):
-        # call to each calling func to
-        print('loop2')
+        print('loop6leftleg')
         range_index = 0
         primary_time = self.primary_time
         final_time = self.final_time
-        for i in range(int(primary_time),
-                       int(self.final_time),
-                       int(self.loop_int_entry.get() * 1000)):
-            primary_time += int(self.loop_int_entry.get() * 1000)
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[8] = self.reserved_2.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(), self.right_e.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.reserved_2.get(), round(self.loop_speed.get())]
-            if range_index % 2 == 0:
-                if '{}'.format(primary_time) in self.model:
-                    current = self.model['{}'.format(primary_time)]
-                    current[8] = self.reserved_2.get()
-                    self.model['{}'.format(primary_time)] = current
-                else:
-                    self.model['{}'.format(primary_time)] = [
-                    self.left_eye.get(),self.loop_sec_entry2.get(),
-                    self.right_sholder.get(), self.right_hand.get(),
-                    self.left_hand.get(), self.left_leg.get(),
-                    self.right_leg.get(), self.reserved_1.get(),
-                    self.loop_sec_entry9.get(), round(self.loop_speed.get())]
-            range_index += 1
-            print(self.model)
+        try:
+            for i in range(int(primary_time),
+                           int(self.final_time),
+                           int(self.loop_int_entry.get() * 1000)):
+                primary_time += int(self.loop_int_entry.get() * 1000)
+                if range_index % 2 == 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[8] = self.reserved_2.get()
+                        current[9] = self.loop_speed9.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(), self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.reserved_2.get(), round(self.loop_speed9.get())]
+
+                if range_index % 2 != 0:
+                    if '{}'.format(primary_time) in self.model:
+                        current = self.model['{}'.format(primary_time)]
+                        current[8] = self.loop_sec_entry9.get()
+                        current[9] = self.loop_speed9.get()
+                        self.model['{}'.format(primary_time)] = current
+                    else:
+                        self.model['{}'.format(primary_time)] = [
+                        self.left_eye.get(),self.right_e.get(),
+                        self.right_sholder.get(), self.right_hand.get(),
+                        self.left_hand.get(), self.left_leg.get(),
+                        self.right_leg.get(), self.reserved_1.get(),
+                        self.loop_sec_entry9.get(), round(self.loop_speed9.get())]
+                range_index += 1
+                print(self.model)
+        except ValueError:
+            messagebox.showwarning("ОШИБКА", "  НУЛЕВОЙ ИНТЕРВАЛ\n")
+
+
+
 
     def count_clicks(self, calling_loop):
         self.count += 1
@@ -993,6 +1023,8 @@ class SERVO_MAN:
             messagebox.showinfo("значение", "записано второе значение ")
             self.final_time = round(self.time_scale.get() * 1000)
             calling_loop()  # space for another loops
+
+
 
 
     def write_changes_to_sql(self):
@@ -1015,14 +1047,128 @@ class SERVO_MAN:
 
 
 
+
+    def write_to_h(self):
+
+        # take all from data base
+        conn = sqlite3.connect(self.path)  # here will be avaliable data bases
+        cursor = conn.cursor()
+        # time
+        try:
+            cursor.execute("SELECT * FROM `time` order by  `time_pos` ")
+            sql_time = cursor.fetchall()
+        except:
+            messagebox.showwarning("ОШИБКА", "НЕ ВЫБРАНА БАЗА ДАНННЫХ\n"
+                                             "создайте новую или выберите\n"
+                                             "cуществующую")
+        finally:
+            # servo_1
+            cursor.execute("SELECT * FROM `servo_0`  ")
+            sql_servo_1 = cursor.fetchall()
+            # servo_2
+            cursor.execute("SELECT * FROM `servo_1`  ")
+            sql_servo_2 = cursor.fetchall()
+            # servo_3
+            cursor.execute("SELECT * FROM `servo_2` ")
+            sql_servo_3 = cursor.fetchall()
+            # servo_4
+            cursor.execute("SELECT * FROM `servo_3`  ")
+            sql_servo_4 = cursor.fetchall()
+            # servo_5
+            cursor.execute("SELECT * FROM `servo_4`  ")
+            sql_servo_5 = cursor.fetchall()
+            # servo_6
+            cursor.execute("SELECT * FROM `servo_5`  ")
+            sql_servo_6 = cursor.fetchall()
+            # servo_7
+            cursor.execute("SELECT * FROM `servo_6`  ")
+            sql_servo_7 = cursor.fetchall()
+            # servo_8
+            cursor.execute("SELECT * FROM `servo_7`  ")
+            sql_servo_8 = cursor.fetchall()
+            # servo_9
+            cursor.execute("SELECT * FROM `servo_8`  ")
+            sql_servo_9 = cursor.fetchall()
+            cursor.execute("SELECT * FROM `speed` order by  `speed_pos` ")
+            sql_speed = cursor.fetchall()
+
+            # servo_1
+            with open('template.h', 'w') as file:
+                file.writelines('int time_play=18000;\n')
+                file.writelines('int speed_row[] = {')
+                file.writelines(str(sql_speed))
+                file.writelines('};\n')
+                file.writelines('int LEyeArray[][] = {')
+                file.writelines(str(sql_servo_1))
+                file.writelines('};\n')
+                file.writelines('int REyeArray[] = {')
+                file.writelines(str(sql_servo_2))
+                file.writelines('};\n')
+                file.writelines('int LArmArray[] = {')
+                file.writelines(str(sql_servo_3))
+                file.writelines('};\n')
+                file.writelines('int RArmArray[] = {')
+                file.writelines(str(sql_servo_4))
+                file.writelines('};\n')
+                file.writelines('int LhandArray[] = {')
+                file.writelines(str(sql_servo_5))
+                file.writelines('};\n')
+                file.writelines('int RhandArray[] = {')
+                file.writelines(str(sql_servo_6))
+                file.writelines('};\n')
+                file.writelines('int LLegArray[] = {')
+                file.writelines(str(sql_servo_7))
+                file.writelines('};\n')
+                file.writelines('int RLegArray[] = {')
+                file.writelines(str(sql_servo_8))
+                file.writelines('};\n')
+                file.writelines('int AssArray[] = {')
+                file.writelines(str(sql_servo_9))
+                file.writelines('};\n')
+                file.writelines('unsigned long KeyArray[] = {')
+                file.writelines(str(sql_time))
+                file.writelines('};\n')
+            print('write to file')
+            self.clear_strings()
+
+    def clear_strings(self):
+        # clean by rubish
+        f = open('template.h', 'r')
+        o = open('VAL.h', 'w')
+        print('writing1')
+        while 1:
+            line = f.readline()
+            if not line: break
+            line = line.replace('(', '')
+            line = line.replace(')', '')
+            line = line.replace(',,', ',')
+            line = line.replace("''", '0')
+            line = line.replace('[][]', '[]')
+            line = line.replace('{[]}', '{}')
+            line = line.replace('{[', '{')
+            line = line.replace(']}', '}')
+            line = line.replace(')]};', '')
+            o.write(line)
+        o.close()
+        call('rm template.h', shell=True)
+        shutil.move("/home/qbc/PycharmProjects/ard/VAL.h",
+                    "/usr/share/arduino/hardware/arduino/cores/arduino/VAL.h")
+        print('writing2')
+
+
+
     def choose_db(self):
         fname = askopenfilename(filetypes=(("scenario", "*.db"),
                                            ("All files", "*.*")),
-                                initialdir='~/PycharmProjects/ard/')
+                                initialdir='~/PycharmProjects/ard/scenario')
         print(fname[-8:-1])
         self.current_name_db = fname
         self.window_db.insert(END, fname[-25:-1] + '\n')
-
+        messagebox.Message('')
+        messagebox.showinfo("база данных", " Нужно выбрать текущию \n "
+                                           "    базу для записи:\n"
+                                           "     затем НАЖАТЬ   \n "
+                                           " текущая база данных")
     def current_db(self):
         self.path = self.current_name_db
 
@@ -1031,9 +1177,9 @@ class SERVO_MAN:
         self.app = new_base(self.newWindow)
 
 
+
 def main():
     root = tk.Tk()
-    root.title("SERVO_M")
 
     app = SERVO_MAN(root)
     root.mainloop()
